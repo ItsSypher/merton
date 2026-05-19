@@ -1,0 +1,43 @@
+name: lint
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+      - run: uv python install 3.12
+      - name: Install dev deps
+        run: |
+          uv venv --python 3.12
+          uv pip install -e ".[dev]"
+      - name: ruff format
+        run: |
+          source .venv/bin/activate
+          ruff format --check .
+      - name: ruff lint
+        run: |
+          source .venv/bin/activate
+          ruff check .
+      - name: mypy
+        run: |
+          source .venv/bin/activate
+          mypy src/merton
+      - name: codespell
+        run: |
+          source .venv/bin/activate
+          codespell src tests docs README.md
+      - name: bandit
+        run: |
+          source .venv/bin/activate
+          bandit -c pyproject.toml -r src/

@@ -1,0 +1,287 @@
+[build-system]
+requires = ["hatchling>=1.27", "hatch-vcs>=0.4"]
+build-backend = "hatchling.build"
+
+# -----------------------------------------------------------------------------
+# Project metadata
+# -----------------------------------------------------------------------------
+
+[project]
+name = "merton"
+dynamic = ["version"]
+description = "Production-grade Merton structural credit-risk model and extensions."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "The Merton Authors" }]
+keywords = [
+    "finance",
+    "credit-risk",
+    "merton",
+    "kmv",
+    "structural",
+    "default-probability",
+    "distance-to-default",
+    "black-cox",
+    "geske",
+    "creditgrades",
+    "vasicek",
+    "basel",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Financial and Insurance Industry",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Office/Business :: Financial",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Typing :: Typed",
+]
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.13",
+    "pandas>=2.2",
+    "numba>=0.61",
+    "array-api-compat>=1.9",
+    "structlog>=24.4",
+    "pydantic>=2.8",
+    "pydantic-settings>=2.5",
+    "typing-extensions>=4.12",
+    "platformdirs>=4.3",
+    "joblib>=1.4",
+    "typer>=0.12",
+    "rich>=13.7",
+]
+
+[project.optional-dependencies]
+gpu = ["cupy-cuda12x>=13.3"]
+jax = ["jax>=0.4.35", "jaxlib>=0.4.35"]
+mlx = ["mlx>=0.21; platform_system=='Darwin' and platform_machine=='arm64'"]
+excel = [
+    "xlwings>=0.33",
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.32",
+    "openpyxl>=3.1",
+    "xlsxwriter>=3.2",
+    "jinja2>=3.1",
+]
+bloomberg = ["blpapi>=3.24"]
+viz = ["matplotlib>=3.9", "seaborn>=0.13", "plotly>=5.24"]
+mcmc = ["emcee>=3.1", "arviz>=0.20"]
+obs = [
+    "opentelemetry-api>=1.27",
+    "opentelemetry-sdk>=1.27",
+    "opentelemetry-exporter-otlp>=1.27",
+]
+data = ["yfinance>=0.2.40", "pandas-datareader>=0.10"]
+docs = [
+    "sphinx>=8.1",
+    "furo>=2024.8",
+    "myst-parser>=4.0",
+    "myst-nb>=1.1",
+    "sphinx-autoapi>=3.3",
+    "sphinx-copybutton>=0.5",
+    "sphinx-design>=0.6",
+    "sphinxcontrib-bibtex>=2.6",
+]
+bench = ["pytest-benchmark>=4.0", "pytest-codspeed>=3.0", "asv>=0.6"]
+dev = [
+    "pytest>=8.3",
+    "pytest-cov>=5.0",
+    "pytest-xdist>=3.6",
+    "pytest-benchmark>=4.0",
+    "pytest-randomly>=3.15",
+    "hypothesis>=6.115",
+    "beartype>=0.19",
+    "mypy>=1.13",
+    "ruff>=0.7",
+    "pre-commit>=4.0",
+    "codespell>=2.3",
+    "bandit[toml]>=1.7",
+    "pip-audit>=2.7",
+    "nox>=2024.10",
+    "build>=1.2",
+]
+all = ["merton[gpu,jax,excel,viz,bloomberg,mcmc,obs,data]"]
+
+[project.scripts]
+merton = "merton.cli.main:app"
+
+[project.urls]
+Documentation = "https://merton.readthedocs.io"
+Source = "https://github.com/merton-credit/merton"
+Issues = "https://github.com/merton-credit/merton/issues"
+Changelog = "https://github.com/merton-credit/merton/blob/main/CHANGELOG.md"
+
+# -----------------------------------------------------------------------------
+# Hatch build config
+# -----------------------------------------------------------------------------
+
+[tool.hatch.version]
+source = "vcs"
+fallback-version = "0.0.0"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/merton/_version.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/merton"]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "src/merton",
+    "tests",
+    "docs",
+    "pyproject.toml",
+    "README.md",
+    "LICENSE",
+    "NOTICE",
+    "CHANGELOG.md",
+]
+
+# -----------------------------------------------------------------------------
+# Ruff (lint + format)
+# -----------------------------------------------------------------------------
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+extend-exclude = ["docs/_build", "src/merton/_version.py"]
+
+[tool.ruff.lint]
+select = [
+    "E", "F", "W",  # pycodestyle / pyflakes
+    "I",            # isort
+    "B",            # flake8-bugbear
+    "UP",           # pyupgrade
+    "N",            # pep8-naming
+    "PL",           # pylint
+    "RUF",          # ruff-specific
+    "NPY",          # numpy
+    "PD",           # pandas-vet
+    "PERF",         # perflint
+    "SIM",          # flake8-simplify
+    "C4",           # comprehensions
+    "ICN",          # import conventions
+    "TID",          # tidy-imports
+]
+ignore = [
+    "PLR0913",  # too many arguments — common in numeric APIs
+    "PLR2004",  # magic value comparisons — fine in math code
+    "E501",     # line too long — formatter handles it
+    "N803",     # argument naming — we use `T`, `E`, `D`, `r` deliberately
+    "N806",     # variable naming — same reason
+    "N802",     # function naming — `MERTON_DD` etc.
+    "N816",     # mixed-case globals — same reason
+    "TID252",   # relative imports — intentional inside the package
+    "RUF001",   # ambiguous Unicode characters — math symbols in strings
+    "RUF002",   #   …in docstrings
+    "RUF003",   #   …in comments
+    "PLC0415",  # lazy imports inside functions — intentional for cold-import speed
+    "PLW0603",  # `global` — intentional for the settings singleton
+    "UP042",    # str+Enum is intentional for DefaultPoint backwards-compat
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["PLR2004", "B018", "S101"]
+"docs/conf.py" = ["E402"]
+
+[tool.ruff.format]
+docstring-code-format = true
+
+# -----------------------------------------------------------------------------
+# mypy
+# -----------------------------------------------------------------------------
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_unreachable = true
+warn_unused_ignores = true
+plugins = ["pydantic.mypy"]
+exclude = ["docs/", "build/", "src/merton/_version.py"]
+
+[[tool.mypy.overrides]]
+module = [
+    "numba.*",
+    "cupy.*",
+    "jax.*",
+    "mlx.*",
+    "scipy.*",
+    "xlwings.*",
+    "joblib.*",
+    "platformdirs.*",
+    "yfinance.*",
+    "pandas_datareader.*",
+]
+ignore_missing_imports = true
+
+# -----------------------------------------------------------------------------
+# pytest
+# -----------------------------------------------------------------------------
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = [
+    "-ra",
+    "--strict-markers",
+    "--strict-config",
+    "--cov=merton",
+    "--cov-report=term-missing",
+]
+testpaths = ["tests"]
+markers = [
+    "slow: marks tests that take >2s (deselect with -m 'not slow')",
+    "gpu: requires CUDA-enabled hardware",
+    "jax: requires the jax extra",
+    "mlx: requires Apple Silicon and the mlx extra",
+    "excel: requires the excel extra",
+    "integration: hits external services (yfinance, FRED)",
+    "golden: paper-replication reference values",
+]
+filterwarnings = [
+    "error",
+    "ignore::DeprecationWarning:numba.*",
+    "ignore::DeprecationWarning:scipy.*",
+]
+
+# -----------------------------------------------------------------------------
+# coverage
+# -----------------------------------------------------------------------------
+
+[tool.coverage.run]
+source = ["src/merton"]
+branch = true
+omit = [
+    "src/merton/_version.py",
+    "src/merton/cli/*",
+    "src/merton/excel/server.py",
+    "src/merton/_backend/_mlx.py",
+    "src/merton/_backend/_cupy.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if TYPE_CHECKING:",
+    "@overload",
+    "\\.\\.\\.",
+]
+fail_under = 70  # raised to 90 by Phase 0.4
+
+# -----------------------------------------------------------------------------
+# bandit
+# -----------------------------------------------------------------------------
+
+[tool.bandit]
+exclude_dirs = ["tests", "docs"]
+skips = ["B101"]

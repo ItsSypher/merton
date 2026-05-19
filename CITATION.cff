@@ -1,0 +1,29 @@
+cff-version: 1.2.0
+title: "merton: A specialized Python package for the Merton structural credit-risk model"
+message: "If you use this software, please cite it as below."
+type: software
+authors:
+  - family-names: The Merton Authors
+repository-code: "https://github.com/merton-credit/merton"
+url: "https://merton.readthedocs.io"
+license: Apache-2.0
+keywords:
+  - merton-model
+  - structural-credit-risk
+  - distance-to-default
+  - probability-of-default
+  - kmv
+  - black-cox
+  - quantitative-finance
+references:
+  - type: article
+    title: "On the Pricing of Corporate Debt: The Risk Structure of Interest Rates"
+    authors:
+      - family-names: Merton
+        given-names: Robert C.
+    journal: "Journal of Finance"
+    volume: 29
+    issue: 2
+    year: 1974
+    start: 449
+    end: 470

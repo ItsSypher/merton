@@ -1,0 +1,80 @@
+name: wheels
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  build_wheels:
+    name: ${{ matrix.os }} ${{ matrix.arch }} cp${{ matrix.pyver }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest,    arch: x86_64, pyver: "311" }
+          - { os: ubuntu-latest,    arch: x86_64, pyver: "312" }
+          - { os: ubuntu-latest,    arch: x86_64, pyver: "313" }
+          - { os: ubuntu-24.04-arm, arch: aarch64, pyver: "311" }
+          - { os: ubuntu-24.04-arm, arch: aarch64, pyver: "312" }
+          - { os: ubuntu-24.04-arm, arch: aarch64, pyver: "313" }
+          - { os: macos-13,         arch: x86_64, pyver: "311" }
+          - { os: macos-13,         arch: x86_64, pyver: "312" }
+          - { os: macos-13,         arch: x86_64, pyver: "313" }
+          - { os: macos-14,         arch: arm64,  pyver: "311" }
+          - { os: macos-14,         arch: arm64,  pyver: "312" }
+          - { os: macos-14,         arch: arm64,  pyver: "313" }
+          - { os: windows-latest,   arch: AMD64,  pyver: "311" }
+          - { os: windows-latest,   arch: AMD64,  pyver: "312" }
+          - { os: windows-latest,   arch: AMD64,  pyver: "313" }
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: pypa/cibuildwheel@v2.21
+        env:
+          CIBW_BUILD: "cp${{ matrix.pyver }}-*"
+          CIBW_ARCHS: ${{ matrix.arch }}
+          CIBW_SKIP: "pp* *-musllinux_i686 *-win32"
+          CIBW_TEST_REQUIRES: "pytest hypothesis"
+          CIBW_TEST_COMMAND: "pytest {project}/tests/unit/core/test_distance.py -q"
+          CIBW_BEFORE_TEST: 'python -c "import merton; merton.warm_cache()"'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wheels-${{ matrix.os }}-${{ matrix.arch }}-cp${{ matrix.pyver }}
+          path: ./wheelhouse/*.whl
+
+  build_sdist:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v3
+      - run: uv python install 3.12
+      - name: Build sdist
+        run: |
+          uv venv
+          uv pip install build
+          .venv/bin/python -m build --sdist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sdist
+          path: dist/*.tar.gz
+
+  publish:
+    needs: [build_wheels, build_sdist]
+    runs-on: ubuntu-latest
+    environment: pypi
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - uses: pypa/gh-action-pypi-publish@release/v1
