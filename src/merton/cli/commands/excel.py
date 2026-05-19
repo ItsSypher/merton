@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import os
 import signal
-import subprocess
+import subprocess  # nosec B404 - used only to spawn the package-internal `merton excel server start` worker, never user input
 import sys
 from pathlib import Path
 
@@ -105,7 +105,7 @@ def server_start(
     if background:
         pid_file = _pid_path()
         pid_file.parent.mkdir(parents=True, exist_ok=True)
-        proc = subprocess.Popen(
+        proc = subprocess.Popen(  # nosec B603 - all argv elements are package-controlled string literals, no shell, no user-supplied input
             [
                 sys.executable,
                 "-m",

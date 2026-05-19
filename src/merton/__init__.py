@@ -1,7 +1,7 @@
 """merton: production-grade Merton structural credit-risk model.
 
-Public API entry points are re-exported here. Heavier submodules (``portfolio``,
-``backtest``, ``scenarios``, ``excel``) are imported lazily on first access via
+Public API entry points are re-exported here. Heavier submodules (``excel``,
+``scenarios``, ``obs``, ``cli``) are imported lazily on first access via
 ``__getattr__`` so a cold ``import merton`` stays under ~150 ms.
 
 Examples
@@ -50,15 +50,17 @@ if TYPE_CHECKING:
     from types import ModuleType
 
 # Submodules surfaced lazily through __getattr__ to keep cold-import light.
+# Only listed submodules that *exist on disk* land here — Phase 0.9 freezes
+# the public surface, so we don't advertise namespaces we don't ship.
+# `io`, `diagnostics`, and `viz` are roadmapped for 1.x; their helpers live
+# on `FirmPanel`, `MertonResult.summary()`, and `reports.html` respectively
+# until those landings.
 _LAZY_SUBMODULES = frozenset(
     {
-        "diagnostics",
+        "cli",
         "excel",
-        "io",
         "obs",
         "scenarios",
-        "viz",
-        "cli",
     }
 )
 

@@ -114,7 +114,7 @@ def block_bootstrap_calibration(
         sample_series[1:] = float(eq[0]) * np.exp(np.cumsum(sample_returns[: n - 1]))
         try:
             params = refit(sample_series)
-        except Exception:  # one bad bootstrap shouldn't kill the run
+        except Exception:  # nosec B112 - one bad bootstrap sample shouldn't kill the run; we report `converged_resamples` in the result for visibility
             continue
         for k, v in params.items():
             parameter_samples.setdefault(k, []).append(float(v))

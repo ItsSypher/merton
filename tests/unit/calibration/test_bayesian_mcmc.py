@@ -23,6 +23,7 @@ def _synthetic_equity_series(seed: int = 42, n: int = 252) -> np.ndarray:
 
 
 class TestBayesianMCMC:
+    @pytest.mark.slow
     def test_recovers_volatility(self) -> None:
         eq = _synthetic_equity_series()
         res = bayesian_mcmc(
@@ -41,6 +42,7 @@ class TestBayesianMCMC:
         assert res.chain.shape[1] == 2
         assert 0.0 < res.acceptance_fraction < 1.0
 
+    @pytest.mark.slow
     def test_credible_intervals_contain_truth(self) -> None:
         eq = _synthetic_equity_series(seed=7)
         res = bayesian_mcmc(
@@ -57,6 +59,7 @@ class TestBayesianMCMC:
         ci = res.credible_interval("asset_vol", level=0.95)
         assert ci.lower < 0.25 < ci.upper
 
+    @pytest.mark.slow
     def test_rejects_unknown_param(self) -> None:
         eq = _synthetic_equity_series()
         res = bayesian_mcmc(
@@ -98,6 +101,7 @@ class TestBayesianMCMC:
 
 
 class TestBayesianMCMCCalibrator:
+    @pytest.mark.slow
     def test_via_calibrator_class(self) -> None:
         eq = _synthetic_equity_series()
         firm = Firm(equity=eq, debt_short=20, debt_long=30, rf=0.04, horizon=1.0)

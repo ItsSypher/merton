@@ -29,6 +29,7 @@ Configuration via environment variables:
 
 from __future__ import annotations
 
+import contextlib
 import functools
 import os
 from collections.abc import Callable
@@ -122,11 +123,12 @@ def disable() -> None:
         return
     provider = _state.get("tracer_provider")
     if provider is not None:
-        try:
+        # Telemetry teardown must never crash user code; if the exporter is
+        # mid-flight or the network is down we still want disable() to leave
+        # the package in a clean state.
+        with contextlib.suppress(Exception):
             provider.force_flush()
             provider.shutdown()
-        except Exception:
-            pass
     _state["enabled"] = False
     _state["tracer"] = None
     _state["tracer_provider"] = None
@@ -188,8 +190,6 @@ def traced(name: str | None = None, **default_attributes: Any) -> Callable[[F], 
 
 # Auto-enable from the environment if the user opted in.
 if os.environ.get("MERTON_OBS") == "1":  # pragma: no cover - env-driven
-    import contextlib
-
     with contextlib.suppress(ImportError):
         enable()
 

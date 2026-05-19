@@ -84,6 +84,7 @@ api/merton/index
 :hidden:
 :caption: Project
 
+contributing/api-stability
 changelog
 references
 ```

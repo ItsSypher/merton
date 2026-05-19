@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (Phase 0.9 — RC)
+
+- **API stability surface**: `docs/contributing/api-stability.md` is the
+  canonical reference for the v1.0 public API contract. Names in
+  `merton.__all__` are stable from 1.0; underscore-prefixed modules are
+  internal.
+- **Deprecation helper** (`merton._deprecation`): `deprecated`,
+  `deprecated_alias`, and `warn_deprecated` route renamed/retired public
+  names through a `DeprecationWarning` with the removal target stamped in.
+- **Release machinery**: `RELEASING.md` documents the tag-driven
+  PyPI Trusted-Publisher flow; `SECURITY.md` documents the disclosure
+  process.
+- **Security CI** (`.github/workflows/security.yml`): weekly `bandit`,
+  `pip-audit`, and OSV scanner runs on `main`; also runs on PRs that
+  touch dependencies or the security config.
+- **Public-API surface tests** (`tests/unit/test_public_api.py`): every
+  name in `merton.__all__` resolves; `__all__` is sorted and excludes
+  private names; the package version is PEP 440.
+- **Slow-test gating**: long MCMC tests are tagged `@pytest.mark.slow`
+  and deselected from the default `pytest` invocation; full suite now
+  runs in ~15 s. Run the slow tier with `pytest -m slow`.
+
+### Changed (Phase 0.9 — RC)
+
+- `merton.__init__.__getattr__` no longer advertises `io`, `diagnostics`,
+  or `viz` — those namespaces are roadmapped for 1.x and their helpers
+  currently live on `FirmPanel`, `MertonResult.summary`, and
+  `merton.reports`.
+- `merton.greeks.autodiff` enables `jax_enable_x64` at import so the
+  autodiff Greeks match the closed-form values to single-precision
+  tolerance; `equity_theta_ad` now follows the option-pricing convention
+  (returns `-∂E/∂T`).
+- Bandit suppressions added inline (`obs.py` teardown, `bootstrap.py`
+  resample exception path, `cli/commands/excel.py` subprocess launcher).
+
 ### Added (Phase 0.8)
 
 - **OpenTelemetry observability** (`merton.obs`): opt-in OTel tracing

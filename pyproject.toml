@@ -226,6 +226,19 @@ module = [
     "platformdirs.*",
     "yfinance.*",
     "pandas_datareader.*",
+    # The following don't ship py.typed (or their stubs are heavyweight and
+    # not part of [dev]); we accept the dynamic typing for these surfaces.
+    "pandas.*",
+    "openpyxl.*",
+    "emcee.*",
+    "arviz.*",
+    "blpapi.*",
+    "plotly.*",
+    "matplotlib.*",
+    "seaborn.*",
+    "pyarrow.*",
+    "fastapi.*",
+    "uvicorn.*",
 ]
 ignore_missing_imports = true
 
@@ -242,6 +255,10 @@ addopts = [
     "--cov=merton",
     "--cov-report=term-missing",
     "--ignore=tests/benchmarks",
+    # Slow tests (long MCMC runs, etc.) are excluded from the default suite
+    # so `pytest` stays under a minute. Run them explicitly with
+    # `pytest -m slow` (or `pytest -m ""` to include everything).
+    "-m", "not slow",
 ]
 testpaths = ["tests"]
 markers = [

@@ -31,6 +31,12 @@ except ImportError as _err:  # pragma: no cover - optional dep
         'merton.greeks.autodiff requires the JAX extra: `pip install "merton[jax]"`.'
     ) from _err
 
+# JAX defaults to float32; structural-credit Greeks need float64 to match
+# the closed-form implementations to single-precision tolerance. Enable
+# x64 once at import time. (Setting it later via jax.config.update would
+# warn that some jit caches are stale.)
+jax.config.update("jax_enable_x64", True)
+
 
 def _equity_value(A, sigma, D, r, T, q):  # type: ignore[no-untyped-def]
     sqrtT = jnp.sqrt(T)
@@ -100,8 +106,12 @@ def equity_gamma_ad(asset_value, asset_vol, debt, rf, T, *, dividend_yield=0.0):
 
 
 def equity_theta_ad(asset_value, asset_vol, debt, rf, T, *, dividend_yield=0.0):  # type: ignore[no-untyped-def]
-    """∂E/∂T via JAX autodiff."""
-    return _equity_theta_fn(*_broadcast_inputs(asset_value, asset_vol, debt, rf, T, dividend_yield))
+    r"""Theta as ``∂E/∂t`` (i.e. ``-∂E/∂T``) — matches the option-pricing
+    convention used by :func:`merton.greeks.equity_theta` so the autodiff
+    and closed-form columns line up sign-wise."""
+    return -_equity_theta_fn(
+        *_broadcast_inputs(asset_value, asset_vol, debt, rf, T, dividend_yield)
+    )
 
 
 def equity_rho_ad(asset_value, asset_vol, debt, rf, T, *, dividend_yield=0.0):  # type: ignore[no-untyped-def]
