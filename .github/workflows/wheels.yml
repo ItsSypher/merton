@@ -43,7 +43,10 @@ jobs:
           CIBW_SKIP: "pp* *-musllinux_i686 *-win32"
           CIBW_TEST_REQUIRES: "pytest hypothesis"
           CIBW_TEST_COMMAND: "pytest {project}/tests/unit/core/test_distance.py -q"
-          CIBW_BEFORE_TEST: 'python -c "import merton; merton.warm_cache()"'
+          # Warm the Numba JIT cache *before* the wheel is tested so the
+          # cached .nbi/.nbc files end up bundled with the package.
+          CIBW_BEFORE_TEST: 'python -c "import merton; merton.warm_cache(); print(\"numba cache warmed\")"'
+          CIBW_ENVIRONMENT: "NUMBA_CACHE_DIR=/tmp/numba-cache PIP_PREFER_BINARY=1"
       - uses: actions/upload-artifact@v4
         with:
           name: wheels-${{ matrix.os }}-${{ matrix.arch }}-cp${{ matrix.pyver }}

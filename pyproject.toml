@@ -239,6 +239,7 @@ addopts = [
     "--strict-config",
     "--cov=merton",
     "--cov-report=term-missing",
+    "--ignore=tests/benchmarks",
 ]
 testpaths = ["tests"]
 markers = [
@@ -267,10 +268,10 @@ omit = [
     "src/merton/_version.py",
     "src/merton/cli/*",
     "src/merton/excel/server.py",
-    "src/merton/_backend/_mlx.py",
-    "src/merton/_backend/_cupy.py",
-    "src/merton/_backend/_jax.py",          # tested under [jax] extra only
-    "src/merton/greeks/autodiff.py",        # tested under [jax] extra only
+    "src/merton/_backend/_mlx.py",         # tested under [mlx] extra only
+    "src/merton/_backend/_cupy.py",        # tested under [gpu] extra only
+    "src/merton/_backend/_jax.py",         # tested under [jax] extra only
+    "src/merton/greeks/autodiff.py",       # tested under [jax] extra only
 ]
 
 [tool.coverage.report]

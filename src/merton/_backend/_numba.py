@@ -131,14 +131,21 @@ def prob_of_default_kernel(dd: np.ndarray | float) -> np.ndarray:
 
 
 def warm_cache() -> None:
-    """Pre-compile all JIT kernels with representative inputs.
+    """Pre-compile every JIT kernel with representative inputs.
 
-    Called by the wheel build to materialise the Numba cache so end users
-    don't pay the first-call compilation cost.
+    Called by the wheel build (`CIBW_BEFORE_TEST` in
+    ``.github/workflows/wheels.yml``) so the resulting ``.numba_cache``
+    files ship inside the wheel. End users pay no first-call JIT cost on
+    `import merton`.
+
+    The function is *idempotent*: calling it again on an already-warm
+    cache simply reuses the cached objects.
     """
+    # 1-D arrays for the parallel-reduce loops.
     x = np.linspace(-3.0, 3.0, 64)
     norm_cdf(x)
     norm_pdf(x)
+    # _d1_d2_impl with a full broadcast set.
     A = np.full(64, 100.0)
     s = np.full(64, 0.25)
     D = np.full(64, 60.0)
@@ -146,6 +153,25 @@ def warm_cache() -> None:
     q = np.zeros(64)
     T = np.ones(64)
     _d1_d2_impl(A, s, D, r, q, T)
+    # Larger array to lock in a second signature where AT-runtime shape
+    # checks happen (some Numba versions emit a different specialisation).
+    big = np.full(1024, 100.0)
+    norm_cdf(big)
+    norm_pdf(big)
+    _d1_d2_impl(
+        big,
+        np.full(1024, 0.25),
+        np.full(1024, 60.0),
+        np.full(1024, 0.04),
+        np.zeros(1024),
+        np.ones(1024),
+    )
+    # Public entry points exercise the wrapper-side broadcasting code paths.
+    d1_d2(100.0, 0.25, 60.0, 0.04, 1.0, 0.0)
+    equity_value(100.0, 0.25, 60.0, 0.04, 1.0, 0.0)
+    distance_to_default_kernel(100.0, 0.25, 60.0, 0.04, 1.0, 0.0)
+    prob_of_default_kernel(2.5)
+    prob_of_default_kernel(np.array([1.0, 2.0, 3.0]))
 
 
 __all__ = [

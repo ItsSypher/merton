@@ -39,8 +39,19 @@ tutorials/01_single_firm_aapl
 
 cookbook/panel-fitting
 cookbook/jax-acceleration
+cookbook/large-panels
 cookbook/yfinance
 cookbook/bloomberg
+```
+
+```{toctree}
+:hidden:
+:caption: Performance
+
+performance/benchmarks
+performance/backend-selection
+performance/apple-silicon
+performance/free-threaded
 ```
 
 ```{toctree}

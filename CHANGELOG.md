@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (Phase 0.5)
+
+- **CuPy backend** (`merton._backend._cupy`): NVIDIA-GPU implementations of
+  `d1_d2`, `equity_value`, `distance_to_default_kernel`,
+  `prob_of_default_kernel`. Lazy-imported under `merton[gpu]`. Backend
+  dispatch routes CuPy-array inputs to the GPU automatically.
+- **MLX backend** (`merton._backend._mlx`): Apple Silicon Metal kernels
+  via `mlx.core`. Normal CDF derived from `mx.erf`. Lazy-imported under
+  `merton[mlx]`. Unified-memory model means zero-copy from NumPy.
+- **AOT-warmed Numba cache**: `merton.warm_cache()` now exercises every
+  `@njit` kernel with representative inputs. `wheels.yml` runs this in
+  `CIBW_BEFORE_TEST` so the compiled `.nbi/.nbc` files ship inside the
+  wheel — users pay zero first-call JIT cost.
+- **100k-firm benchmark suite** (`tests/benchmarks/`): pytest-benchmark
+  coverage of single-firm fits, 1k/10k/100k panels, calibration on a
+  252-day series, portfolio Monte Carlo, and backtest metrics on
+  1 000 000 (PD, default) pairs. Excluded from the default `pytest`
+  run via `addopts = "--ignore=tests/benchmarks"`.
+- **Free-threaded CI**: dedicated `cp313t` job in `.github/workflows/test.yml`
+  that asserts `sys._is_gil_enabled() == False` and runs the full unit +
+  property + golden test suites under GIL-free Python.
+- **Performance docs**: `docs/performance/{benchmarks, backend-selection,
+  apple-silicon, free-threaded}.md` and `docs/cookbook/large-panels.md`.
+
 ### Added (Phase 0.4)
 
 - **Extensions**:

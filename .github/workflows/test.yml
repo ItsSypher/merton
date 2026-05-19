@@ -41,3 +41,30 @@ jobs:
         if: ${{ matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12' }}
         with:
           file: ./coverage.xml
+
+  free-threaded:
+    name: pytest (free-threaded Python 3.13t)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+      - name: Set up free-threaded Python 3.13t
+        run: uv python install 3.13t
+      - name: Install package
+        run: |
+          uv venv --python 3.13t
+          uv pip install -e ".[dev]"
+      - name: Verify GIL is disabled
+        run: |
+          source .venv/bin/activate
+          python -c "import sys; assert not sys._is_gil_enabled(), 'expected GIL-free build'; print('GIL disabled OK')"
+      - name: Run unit tests under free-threading
+        run: |
+          source .venv/bin/activate
+          # -p no:randomly because the free-threaded run can still expose race conditions;
+          # -n auto for parallel pytest workers.
+          pytest tests/unit tests/property tests/golden -q -n auto --no-cov
