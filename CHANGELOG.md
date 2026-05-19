@@ -7,6 +7,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (Phase 0.7)
+
+- **CreditGrades model** (`merton.extensions.creditgrades`):
+  Finger-Finkelstein-Pan-Lardy-Ta-Tierney 2002 closed-form survival /
+  PD / implied CDS spread plus `CreditGradesModel.fit`. Random
+  default-barrier widens short-horizon credit spreads vs Merton.
+- **Leland-Toft endogenous-default model**
+  (`merton.extensions.leland_toft`): optimal default boundary
+  ``V_B^*``, PD, equity / debt values, and `LelandToftModel` calibrator
+  on coupon-paying perpetual debt with taxes and bankruptcy costs.
+- **Zhou / Merton jump-diffusion**
+  (`merton.extensions.jump_diffusion`): Poisson-weighted series PD,
+  Monte Carlo path simulator (`simulate_jump_diffusion`), and
+  `JumpDiffusionModel` that calibrates ``(A, σ_A)`` via JMR and adds
+  the jump contribution.
+- **Longstaff-Schwartz two-factor model**
+  (`merton.extensions.longstaff_schwartz`): Vasicek short-rate
+  dynamics + asset GBM with correlation; closed-form PD at
+  ``ρ = 0`` and vectorised Monte Carlo first-passage estimator
+  otherwise.
+- **Bayesian MCMC calibrator**
+  (`merton.calibration.bayesian_mcmc`): `bayesian_mcmc` and
+  `BayesianMCMCCalibrator` wrap `emcee.EnsembleSampler` around the
+  Duan log-likelihood. Returns a `BayesianCalibrationResult` exposing
+  the full posterior chain, log-probabilities, autocorrelation time,
+  acceptance fraction, and percentile credible intervals.
+- **Theory docs**: `docs/theory/extensions/{creditgrades, leland-toft,
+  jump-diffusion, longstaff-schwartz}.md` and
+  `docs/theory/bayesian-mcmc.md`.
+
 ### Added (Phase 0.6)
 
 - **Excel integration via xlwings Server (FastAPI)**:

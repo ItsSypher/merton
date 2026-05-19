@@ -21,9 +21,14 @@ theory/kmv
 theory/calibration
 theory/extensions/black-cox
 theory/extensions/geske
+theory/extensions/creditgrades
+theory/extensions/leland-toft
+theory/extensions/jump-diffusion
+theory/extensions/longstaff-schwartz
 theory/portfolio/vasicek
 theory/portfolio/copulas
 theory/metrics
+theory/bayesian-mcmc
 ```
 
 ```{toctree}

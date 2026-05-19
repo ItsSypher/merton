@@ -31,6 +31,19 @@ from .kmv_iterative import KMVCalibrator, kmv_iterative
 from .naive import NaiveCalibrator, naive
 from .vassalou_xing import VassalouXingCalibrator, vassalou_xing
 
+# Lazy MCMC import — only available with merton[mcmc].
+try:
+    from .bayesian_mcmc import (
+        BayesianCalibrationResult,
+        BayesianMCMCCalibrator,
+        bayesian_mcmc,
+    )
+
+    _HAS_MCMC = True
+except ImportError:  # pragma: no cover - depends on extras
+    _HAS_MCMC = False
+
+
 __all__ = [
     "BootstrapResult",
     "CalibrationResult",
@@ -55,3 +68,9 @@ __all__ = [
     "vassalou_xing",
     "wald_ci",
 ]
+if _HAS_MCMC:
+    __all__ += [
+        "BayesianCalibrationResult",
+        "BayesianMCMCCalibrator",
+        "bayesian_mcmc",
+    ]
