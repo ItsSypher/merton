@@ -35,6 +35,15 @@ tutorials/01_single_firm_aapl
 
 ```{toctree}
 :hidden:
+:caption: Excel
+
+excel/installation
+excel/functions
+excel/sample-workbook
+```
+
+```{toctree}
+:hidden:
 :caption: Cookbook
 
 cookbook/panel-fitting
@@ -42,6 +51,7 @@ cookbook/jax-acceleration
 cookbook/large-panels
 cookbook/yfinance
 cookbook/bloomberg
+cookbook/excel-dashboard
 ```
 
 ```{toctree}

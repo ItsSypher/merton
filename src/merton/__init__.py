@@ -24,7 +24,15 @@ except ImportError:  # pragma: no cover - first install before hatch-vcs runs
     __version__ = "0.0.0+unknown"
 
 from . import _config as config
-from . import backtest, calibration, exceptions, extensions, greeks, portfolio, reports
+from . import (
+    backtest,
+    calibration,
+    exceptions,
+    extensions,
+    greeks,
+    portfolio,
+    reports,
+)
 from ._backend._numba import warm_cache as _warm_numba_cache
 from .batch import batch_fit
 from .core.default_point import DefaultPoint
@@ -88,6 +96,7 @@ __all__ = [
     "config",
     "distance_to_default",
     "equity_value",
+    "excel",
     "exceptions",
     "extensions",
     "fit",

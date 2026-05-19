@@ -7,6 +7,7 @@ import typer
 from .. import __version__
 from .commands import config as config_cmd
 from .commands import doctor as doctor_cmd
+from .commands import excel as excel_cmd
 from .commands import fit as fit_cmd
 
 app = typer.Typer(
@@ -18,6 +19,7 @@ app = typer.Typer(
 )
 
 app.add_typer(config_cmd.app, name="config", help="Read or write package configuration.")
+app.add_typer(excel_cmd.app, name="excel", help="Excel integration (install, server, sample).")
 app.command(name="doctor", help="Diagnose backends, GPU availability, and runtime info.")(
     doctor_cmd.run
 )

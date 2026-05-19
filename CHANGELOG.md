@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (Phase 0.6)
+
+- **Excel integration via xlwings Server (FastAPI)**:
+  - `merton.excel.functions` — pure-Python wrappers for every formula:
+    `merton_dd`, `merton_pd`, `merton_spread`, `merton_asset_value`,
+    `merton_asset_vol`, `merton_greeks`, `merton_pd_term`,
+    `merton_backtest`, `merton_portfolio_var`, `merton_black_cox`.
+  - `merton.excel.server` — FastAPI app exposing ``/healthz``,
+    ``/functions.json``, ``/static/functions.{js,html}``,
+    ``/taskpane.html``, and ``/call``. Lazy FastAPI import.
+  - `merton.excel.manifest` — Office.js manifest XML generator with
+    deterministic add-in UUID per base URL.
+  - `merton.excel.installer` — write / remove the manifest in the OS's
+    Excel sideload directory (macOS / Windows / Linux fallback).
+- **Classic xlwings UDF fallback** (`merton.excel.udf`): registers
+  every formula via the legacy `@xw.func` decorator for Windows
+  desktop where running a local HTTP server isn't convenient.
+- **CLI commands** (`merton excel ...`):
+  - `install --url <BASE_URL>` writes the manifest.
+  - `uninstall` removes the manifest.
+  - `status` reports manifest + server PID.
+  - `server start [--host --port --reload --background]` runs uvicorn.
+  - `server stop` graceful SIGTERM via a PID file under
+    `platformdirs.user_runtime_dir`.
+  - `sample-workbook --out=<PATH>` writes a worked-example workbook.
+- **Sample workbook** (`merton.excel.sample.write_sample_workbook`):
+  programmatic openpyxl file with *Read me*, *Single firm*, *Portfolio*,
+  *Backtest*, and *Function reference* sheets.
+- **`python -m merton`** entrypoint via `src/merton/__main__.py`.
+- **Docs**: `docs/excel/{installation, functions, sample-workbook}.md`,
+  cookbook `excel-dashboard.md` with a full live-dashboard recipe.
+
 ### Added (Phase 0.5)
 
 - **CuPy backend** (`merton._backend._cupy`): NVIDIA-GPU implementations of
