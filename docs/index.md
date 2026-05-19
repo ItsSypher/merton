@@ -25,6 +25,7 @@ theory/extensions/creditgrades
 theory/extensions/leland-toft
 theory/extensions/jump-diffusion
 theory/extensions/longstaff-schwartz
+theory/extensions/climate
 theory/portfolio/vasicek
 theory/portfolio/copulas
 theory/metrics
@@ -36,6 +37,7 @@ theory/bayesian-mcmc
 :caption: Tutorials
 
 tutorials/01_single_firm_aapl
+tutorials/06_climate_scenarios
 ```
 
 ```{toctree}
@@ -57,6 +59,8 @@ cookbook/large-panels
 cookbook/yfinance
 cookbook/bloomberg
 cookbook/excel-dashboard
+cookbook/observability
+cookbook/spark-dask
 ```
 
 ```{toctree}

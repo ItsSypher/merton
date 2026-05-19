@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (Phase 0.8)
+
+- **OpenTelemetry observability** (`merton.obs`): opt-in OTel tracing
+  via `enable()` / `disable()` with `span()` context manager and
+  `traced()` decorator. Auto-enable through `MERTON_OBS=1`; endpoint
+  override via `MERTON_OTLP_ENDPOINT`; optional console mirror via
+  `MERTON_OBS_CONSOLE=1`. Pulls in `opentelemetry-{api,sdk,exporter-otlp}`
+  via the new `[obs]` extra.
+- **Scenarios package** (`merton.scenarios`):
+  - `Scenario` ABC + `CompositeScenario` (chain with `|`) +
+    `ScenarioResult` audit record.
+  - Atomic shocks `equity_shock`, `vol_shock`, `rate_shock`, `debt_shock`
+    for ad-hoc stress.
+  - `ClimateScenario` with carbon-price path + sectoral PD multipliers,
+    pass-through, and chronic physical-risk parameters. `Sector` enum
+    with default emission-intensity table; `carbon_price_curve`
+    piecewise-linear helper; `carbon_price_to_writedown` standalone.
+- **NGFS Phase V (2024) scenarios**
+  (`merton.scenarios.predefined.ngfs`): `net_zero_2050`,
+  `delayed_transition`, `current_policies`, `fragmented_world`.
+- **ClimateOverlay structural model** (`merton.extensions.climate`):
+  wraps any `StructuralModel` / `MertonModel` with a `ClimateScenario`
+  + sector tag; writes down equity before calibration and scales PD by
+  the sectoral multiplier.
+- **Docs**: `docs/theory/extensions/climate.md`,
+  `docs/tutorials/06_climate_scenarios.md`,
+  `docs/cookbook/observability.md`, `docs/cookbook/spark-dask.md`.
+
 ### Added (Phase 0.7)
 
 - **CreditGrades model** (`merton.extensions.creditgrades`):

@@ -21,6 +21,7 @@ from __future__ import annotations
 
 from .base import StructuralModel, StructuralResult
 from .black_cox import BlackCoxModel, black_cox_pd
+from .climate import ClimateOverlay
 from .creditgrades import (
     CreditGradesModel,
     creditgrades_pd,
@@ -49,6 +50,7 @@ from .longstaff_schwartz import (
 
 __all__ = [
     "BlackCoxModel",
+    "ClimateOverlay",
     "CreditGradesModel",
     "GeskeModel",
     "JumpDiffusionModel",
