@@ -26,10 +26,12 @@ except ImportError:  # pragma: no cover - first install before hatch-vcs runs
 from . import _config as config
 from . import calibration, exceptions, greeks
 from ._backend._numba import warm_cache as _warm_numba_cache
+from .batch import batch_fit
 from .core.default_point import DefaultPoint
 from .core.distance import distance_to_default, prob_of_default
 from .core.firm import Firm
 from .core.model import MertonModel, fit
+from .core.panel import FirmPanel
 from .core.physical import physical_pd
 from .core.pricing import equity_value
 from .core.result import MertonResult
@@ -78,9 +80,11 @@ def warm_cache() -> None:
 __all__ = [
     "DefaultPoint",
     "Firm",
+    "FirmPanel",
     "MertonModel",
     "MertonResult",
     "__version__",
+    "batch_fit",
     "calibration",
     "config",
     "distance_to_default",

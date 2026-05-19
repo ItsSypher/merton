@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (Phase 0.3)
+
+- JAX-backed kernels (`merton._backend._jax`): `jit`-compiled `d1_d2`,
+  `equity_value`, `distance_to_default_kernel`, `prob_of_default_kernel`.
+  Lazy-imported; only loaded when JAX is installed.
+- Backend dispatch transparently routes JAX arrays to the JAX backend
+  (zero-copy stay on device).
+- JAX autodiff Greeks (`merton.greeks.autodiff`): `equity_delta_ad`,
+  `equity_gamma_ad`, `equity_vega_ad`, `equity_theta_ad`, `equity_rho_ad`,
+  `pd_leverage_sensitivity_ad`, `pd_vol_sensitivity_ad`,
+  `pd_rate_sensitivity_ad`. Each is `jit`-compiled and `vmap`-friendly.
+- `merton.FirmPanel` — Arrow-backed columnar container with constructors
+  for pandas / polars / Arrow / CSV / Parquet / dict, columnar accessors,
+  Firm-row iteration, boolean masks, and zero-copy slicing.
+- `merton.batch_fit(panel_or_df, *, method, n_jobs, dispatch, progress,
+  on_error, …)` — joblib-threaded panel calibration; returns the same
+  dataframe type you handed in (pandas / polars / Arrow).
+- `merton.batch.dispatch.parallel_map` — pluggable joblib / sequential /
+  dask / ray dispatcher.
+- `merton` CLI (typer): `merton --version`, `merton doctor` (Python build,
+  GIL status, installed backends, GPU/MLX/JAX devices, dependency
+  versions, suggested extras), `merton config show|set|reset`,
+  `merton fit <input>` for single-firm and panel calibration.
+- `MERTON_CONFIG_DIR` env var lets users / tests redirect the persisted
+  config file location.
+- Added `pyarrow>=15` and `tomli-w>=1.0` to core dependencies.
+- Cookbook: `docs/cookbook/panel-fitting.md`, `docs/cookbook/jax-acceleration.md`.
+
 ### Added (Phase 0.2)
 
 - Duan (1994) transformed-data MLE calibrator (`merton.calibration.duan_mle`).

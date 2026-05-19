@@ -48,6 +48,7 @@ dependencies = [
     "numpy>=1.26",
     "scipy>=1.13",
     "pandas>=2.2",
+    "pyarrow>=15",
     "numba>=0.61",
     "array-api-compat>=1.9",
     "structlog>=24.4",
@@ -58,6 +59,7 @@ dependencies = [
     "joblib>=1.4",
     "typer>=0.12",
     "rich>=13.7",
+    "tomli-w>=1.0",
 ]
 
 [project.optional-dependencies]
@@ -193,6 +195,7 @@ ignore = [
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["PLR2004", "B018", "S101"]
 "docs/conf.py" = ["E402"]
+"src/merton/cli/**" = ["B008", "PLR0912"]  # typer-style argument defaults
 
 [tool.ruff.format]
 docstring-code-format = true

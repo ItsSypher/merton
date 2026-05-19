@@ -30,6 +30,14 @@ tutorials/01_single_firm_aapl
 
 ```{toctree}
 :hidden:
+:caption: Cookbook
+
+cookbook/panel-fitting
+cookbook/jax-acceleration
+```
+
+```{toctree}
+:hidden:
 :caption: API reference
 
 api/merton/index

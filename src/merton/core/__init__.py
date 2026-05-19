@@ -9,6 +9,7 @@ from .distance import (
 )
 from .firm import Firm
 from .model import MertonModel
+from .panel import FirmPanel
 from .physical import physical_pd
 from .pricing import equity_value
 from .result import MertonResult
@@ -18,6 +19,7 @@ from .term_structure import term_structure_pd
 __all__ = [
     "DefaultPoint",
     "Firm",
+    "FirmPanel",
     "MertonModel",
     "MertonResult",
     "compute_default_point",
