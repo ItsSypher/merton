@@ -24,7 +24,7 @@ except ImportError:  # pragma: no cover - first install before hatch-vcs runs
     __version__ = "0.0.0+unknown"
 
 from . import _config as config
-from . import calibration, exceptions, greeks
+from . import backtest, calibration, exceptions, extensions, greeks, portfolio, reports
 from ._backend._numba import warm_cache as _warm_numba_cache
 from .batch import batch_fit
 from .core.default_point import DefaultPoint
@@ -44,11 +44,9 @@ if TYPE_CHECKING:
 # Submodules surfaced lazily through __getattr__ to keep cold-import light.
 _LAZY_SUBMODULES = frozenset(
     {
-        "backtest",
         "diagnostics",
         "excel",
         "io",
-        "portfolio",
         "scenarios",
         "viz",
         "cli",
@@ -84,17 +82,21 @@ __all__ = [
     "MertonModel",
     "MertonResult",
     "__version__",
+    "backtest",
     "batch_fit",
     "calibration",
     "config",
     "distance_to_default",
     "equity_value",
     "exceptions",
+    "extensions",
     "fit",
     "greeks",
     "implied_credit_spread",
     "physical_pd",
+    "portfolio",
     "prob_of_default",
+    "reports",
     "term_structure_pd",
     "warm_cache",
 ]

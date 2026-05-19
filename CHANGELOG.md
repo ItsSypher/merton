@@ -7,6 +7,48 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (Phase 0.4)
+
+- **Extensions**:
+  - `merton.extensions.BlackCoxModel` and `black_cox_pd` — first-passage
+    barrier model with constant or exponentially-decaying barrier
+    (closed-form risk-neutral PD via the reflection principle).
+  - `merton.extensions.GeskeModel` and `geske_equity_value` /
+    `geske_pd` — 2-period compound-option pricing using the
+    bivariate-normal CDF.
+  - `merton.extensions.StructuralModel` / `StructuralResult` — shared
+    ABC + result dataclass for all non-vanilla structural models.
+- **Portfolio**:
+  - `merton.portfolio.Portfolio` — container plus Monte Carlo +
+    analytic-Vasicek engines. Accepts a list of `Firm` objects *or* a
+    pre-computed PD vector.
+  - `merton.portfolio.LossDistribution` — VaR, expected shortfall,
+    economic capital, per-firm contribution decomposition.
+  - `merton.portfolio.VasicekFactor` — Vasicek single-factor analytics.
+  - `merton.portfolio.basel_irb_correlation` + `basel_irb_capital` —
+    BCBS-prescribed asset correlation and IRB unexpected-loss capital
+    with the standard maturity adjustment.
+  - `merton.portfolio.copulas.GaussianCopula` and `TCopula` for
+    correlated-default sampling.
+  - `merton.portfolio.asset_correlation_from_equity` and
+    `granularity_adjustment` / `hhi` / `effective_n`.
+- **Backtest harness**:
+  - `merton.backtest.{auc, accuracy_ratio, brier, ks_statistic,
+    hosmer_lemeshow}` — implementations validated against sklearn's
+    equivalents (no sklearn dependency).
+  - `merton.backtest.ROCCurve` and `roc_curve`; `CalibrationCurve` and
+    `calibration_curve` / `calibration_plot`.
+  - `merton.backtest.rolling_window` — slide AUC/Brier/KS over a panel.
+  - `merton.backtest.Backtest` + `BacktestResult` orchestrator with
+    `add_metric`, `to_dict`, `summary`.
+- **Reports**:
+  - `merton.reports.render_backtest_report` — dependency-light
+    standalone HTML report with embedded ROC + calibration SVGs.
+- **Docs**: theory pages for Black-Cox, Geske, Vasicek, copulas, and
+  metrics; cookbook recipes for `yfinance` and Bloomberg ingestion.
+- **Testing**: extensive test coverage (336 tests, 90.87% coverage),
+  with the gate held at 90% via `fail_under` in `pyproject.toml`.
+
 ### Added (Phase 0.3)
 
 - JAX-backed kernels (`merton._backend._jax`): `jit`-compiled `d1_d2`,

@@ -19,6 +19,11 @@ getting-started/excel-quickstart
 theory/merton-1974
 theory/kmv
 theory/calibration
+theory/extensions/black-cox
+theory/extensions/geske
+theory/portfolio/vasicek
+theory/portfolio/copulas
+theory/metrics
 ```
 
 ```{toctree}
@@ -34,6 +39,8 @@ tutorials/01_single_firm_aapl
 
 cookbook/panel-fitting
 cookbook/jax-acceleration
+cookbook/yfinance
+cookbook/bloomberg
 ```
 
 ```{toctree}
