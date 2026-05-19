@@ -54,7 +54,9 @@ myst_enable_extensions = [
     "tasklist",
 ]
 
-nb_execution_mode = "off"  # set to "auto" once tutorials stabilise
+nb_execution_mode = "auto"
+nb_execution_timeout = 120
+nb_execution_allow_errors = False
 
 source_suffix = {
     ".md": "markdown",

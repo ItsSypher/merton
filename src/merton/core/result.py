@@ -56,8 +56,11 @@ class MertonResult:
     asset_vol: float
     asset_drift: float | None = None
     default_point: float | FloatArray
-    dd: float | FloatArray
-    pd: float | FloatArray
+    dd: float
+    pd: float
+    dd_series: FloatArray | None = None
+    pd_series: FloatArray | None = None
+    asset_value_series: FloatArray | None = None
     method: str = "unknown"
     n_iter: int = 0
     converged: bool = True
@@ -87,7 +90,7 @@ class MertonResult:
         diagnostics: dict[str, Any] | None = None,
     ) -> MertonResult:
         dp = firm.default_point_value()
-        dd = distance_to_default(
+        dd_full = distance_to_default(
             asset_value=asset_value,
             asset_vol=asset_vol,
             debt=dp,
@@ -95,15 +98,43 @@ class MertonResult:
             T=firm.horizon,
             dividend_yield=firm.dividend_yield,
         )
-        pd_ = prob_of_default(dd)
+        pd_full = prob_of_default(dd_full)
+
+        # Scalar headline values use the *latest* observation when we have
+        # a time series; otherwise the scalar result of the broadcast.
+        if np.ndim(dd_full) == 0:
+            dd_scalar = float(dd_full)
+            pd_scalar = float(pd_full)
+            dd_series_arr: FloatArray | None = None
+            pd_series_arr: FloatArray | None = None
+        else:
+            dd_arr = np.asarray(dd_full, dtype=np.float64)
+            pd_arr = np.asarray(pd_full, dtype=np.float64)
+            dd_scalar = float(dd_arr[-1])
+            pd_scalar = float(pd_arr[-1])
+            dd_series_arr = dd_arr
+            pd_series_arr = pd_arr
+
+        asset_value_series: FloatArray | None = None
+        asset_value_for_field: float | FloatArray
+        if np.ndim(asset_value) > 0:
+            av_arr = np.asarray(asset_value, dtype=np.float64)
+            asset_value_series = av_arr
+            asset_value_for_field = float(av_arr[-1])
+        else:
+            asset_value_for_field = float(np.asarray(asset_value))
+
         return cls(
             firm=firm,
-            asset_value=asset_value,
+            asset_value=asset_value_for_field,
             asset_vol=asset_vol,
             asset_drift=asset_drift,
             default_point=dp,
-            dd=dd,
-            pd=pd_,
+            dd=dd_scalar,
+            pd=pd_scalar,
+            dd_series=dd_series_arr,
+            pd_series=pd_series_arr,
+            asset_value_series=asset_value_series,
             method=method,
             n_iter=n_iter,
             converged=converged,
@@ -145,6 +176,100 @@ class MertonResult:
 
         return _physical_pd(self.pd, self.asset_vol, sharpe_ratio, self.firm.horizon)
 
+    def confidence_interval(
+        self,
+        level: float = 0.95,
+        method: str = "asymptotic",
+        *,
+        quantities: tuple[str, ...] = ("asset_vol", "asset_drift", "dd", "pd"),
+    ) -> dict[str, Any]:
+        """Confidence intervals for fitted parameters and derived quantities.
+
+        Parameters
+        ----------
+        level
+            Confidence level (e.g. 0.95).
+        method
+            ``"asymptotic"`` uses the MLE observed Fisher information
+            (requires :attr:`covariance_` to be set, e.g. from
+            ``method='duan_mle'``). ``"bootstrap"`` uses the
+            :class:`~merton.calibration.BootstrapResult` stashed in
+            ``diagnostics_['bootstrap']`` (requires
+            ``MertonModel(n_bootstrap=...)``).
+        quantities
+            Names to report. Supported: ``"asset_vol"``, ``"asset_drift"``,
+            ``"dd"``, ``"pd"``.
+        """
+        if method == "asymptotic":
+            return self._asymptotic_ci(level=level, quantities=quantities)
+        if method == "bootstrap":
+            return self._bootstrap_ci(level=level, quantities=quantities)
+        raise ValueError(f"unknown CI method {method!r}; choose 'asymptotic' or 'bootstrap'")
+
+    def _asymptotic_ci(self, *, level: float, quantities: tuple[str, ...]) -> dict[str, Any]:
+        from ..calibration.covariance import delta_method, standard_errors, wald_ci
+
+        if self.covariance_ is None:
+            raise ValueError(
+                "asymptotic CIs require a fitted Hessian; "
+                "use method='duan_mle' or method='bootstrap'."
+            )
+        cov = np.asarray(self.covariance_, dtype=np.float64)
+        se = standard_errors(cov)
+        order = self.diagnostics_.get("param_order", ("asset_drift", "asset_vol"))
+        idx = {name: i for i, name in enumerate(order)}
+        out: dict[str, Any] = {}
+        if "asset_vol" in quantities and "asset_vol" in idx:
+            out["asset_vol"] = wald_ci(self.asset_vol, float(se[idx["asset_vol"]]), level=level)
+        if "asset_drift" in quantities and "asset_drift" in idx and self.asset_drift is not None:
+            out["asset_drift"] = wald_ci(
+                self.asset_drift, float(se[idx["asset_drift"]]), level=level
+            )
+        A_scalar = self._scalar_asset_value()
+        D_scalar = self._scalar_default_point()
+        rf = float(np.mean(np.asarray(self.firm.rf, dtype=np.float64)))
+        q = float(np.mean(np.asarray(self.firm.dividend_yield, dtype=np.float64)))
+        T = float(self.firm.horizon)
+
+        def _dd_from_params(theta: np.ndarray) -> float:
+            sigma = float(theta[idx["asset_vol"]])
+            sqrtT = float(np.sqrt(T))
+            return float(
+                (np.log(A_scalar / D_scalar) + (rf - q - 0.5 * sigma * sigma) * T) / (sigma * sqrtT)
+            )
+
+        theta0 = np.zeros(len(order))
+        theta0[idx["asset_vol"]] = self.asset_vol
+        if "asset_drift" in idx and self.asset_drift is not None:
+            theta0[idx["asset_drift"]] = self.asset_drift
+
+        if "dd" in quantities:
+            est, se_dd = delta_method(_dd_from_params, theta0, cov)
+            out["dd"] = wald_ci(est, se_dd, level=level)
+        if "pd" in quantities:
+            from scipy.stats import norm as _norm
+
+            def _pd_from_params(theta: np.ndarray) -> float:
+                return float(_norm.cdf(-_dd_from_params(theta)))
+
+            est, se_pd = delta_method(_pd_from_params, theta0, cov)
+            out["pd"] = wald_ci(est, se_pd, level=level)
+        return out
+
+    def _bootstrap_ci(self, *, level: float, quantities: tuple[str, ...]) -> dict[str, Any]:
+        bs = self.diagnostics_.get("bootstrap")
+        if bs is None:
+            raise ValueError(
+                "no bootstrap samples on this result; refit with MertonModel(n_bootstrap=...)."
+            )
+        out: dict[str, Any] = {}
+        for name in quantities:
+            try:
+                out[name] = bs.ci(name, level=level)
+            except KeyError:
+                continue
+        return out
+
     def greeks(self) -> GreeksResult:
         """Compute all closed-form Greeks at the calibrated operating point."""
         from ..greeks import greeks as _greeks
@@ -170,12 +295,8 @@ class MertonResult:
             "asset_vol": self.asset_vol,
             "asset_drift": self.asset_drift,
             "default_point": self._scalar_default_point(),
-            "dd": float(
-                np.asarray(self.dd).item() if np.ndim(self.dd) == 0 else float(np.mean(self.dd))
-            ),
-            "pd": float(
-                np.asarray(self.pd).item() if np.ndim(self.pd) == 0 else float(np.mean(self.pd))
-            ),
+            "dd": float(self.dd),
+            "pd": float(self.pd),
             "horizon": self.firm.horizon,
             "converged": self.converged,
             "n_iter": self.n_iter,

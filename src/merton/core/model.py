@@ -52,6 +52,8 @@ class MertonModel:
         max_iter: int | None = None,
         backend: str | None = None,
         random_state: int | None = None,
+        n_bootstrap: int = 0,
+        block_length: int | None = None,
     ) -> None:
         cfg = get_config()
         self.method = method or cfg.default_calibration_method
@@ -61,6 +63,8 @@ class MertonModel:
         self.max_iter = max_iter if max_iter is not None else cfg.default_max_iter
         self.backend = backend
         self.random_state = random_state
+        self.n_bootstrap = n_bootstrap
+        self.block_length = block_length
 
     # ------------------------------------------------------------------
 
@@ -68,6 +72,9 @@ class MertonModel:
         """Calibrate the model for ``firm`` and return a :class:`MertonResult`."""
         calibrator = self._build_calibrator()
         calib = calibrator.fit(firm)
+        diagnostics: dict[str, Any] = dict(calib.diagnostics)
+        if self.n_bootstrap > 0:
+            diagnostics["bootstrap"] = self._run_bootstrap(firm)
         result = MertonResult.from_calibration(
             firm,
             asset_value=calib.asset_value,
@@ -78,7 +85,7 @@ class MertonModel:
             converged=calib.converged,
             log_likelihood=calib.log_likelihood,
             covariance=calib.covariance,
-            diagnostics=calib.diagnostics,
+            diagnostics=diagnostics,
         )
         if self.physical_measure and self.sharpe_ratio is not None:
             physical = result.physical_pd(self.sharpe_ratio)
@@ -136,6 +143,59 @@ class MertonModel:
             return cls(tol=self.tol, max_iter=self.max_iter)  # type: ignore[call-arg]
         except TypeError:
             return cls()
+
+    def _run_bootstrap(self, firm: Firm):
+        """Block-bootstrap the calibration over the equity series.
+
+        Only runs for time-series-capable calibrators (currently
+        ``vassalou_xing`` and ``duan_mle``). For snapshot data the bootstrap
+        is a no-op returning ``None``.
+        """
+        import numpy as np
+
+        from ..calibration.bootstrap import block_bootstrap_calibration
+
+        eq = np.atleast_1d(np.asarray(firm.equity, dtype=np.float64))
+        if eq.size < 30:
+            return None
+        dp = firm.default_point_value()
+        debt = float(dp.item() if np.ndim(dp) == 0 else float(np.mean(dp)))
+        rf = float(np.mean(np.asarray(firm.rf, dtype=np.float64)))
+        T = float(firm.horizon)
+        q = float(np.mean(np.asarray(firm.dividend_yield, dtype=np.float64)))
+        method = self.method
+
+        def refit(sample_series):
+            inner_firm = firm.replace(equity=sample_series)
+            calib = get_calibrator(method)()
+            res = calib.fit(inner_firm)
+            return {
+                "asset_vol": float(res.asset_vol),
+                "asset_drift": float(res.asset_drift)
+                if res.asset_drift is not None
+                else float("nan"),
+                "asset_value": float(
+                    res.asset_value if np.ndim(res.asset_value) == 0 else res.asset_value[-1]
+                ),
+            }
+
+        def _dd(params):
+            A = params["asset_value"]
+            sigma = params["asset_vol"]
+            sqrtT = float(np.sqrt(T))
+            return float((np.log(A / debt) + (rf - q - 0.5 * sigma * sigma) * T) / (sigma * sqrtT))
+
+        from scipy.stats import norm as _norm
+
+        derived = {"dd": _dd, "pd": lambda p: float(_norm.cdf(-_dd(p)))}
+        return block_bootstrap_calibration(
+            eq,
+            refit=refit,
+            n_resamples=self.n_bootstrap,
+            block_length=self.block_length,
+            seed=self.random_state,
+            derived=derived,
+        )
 
 
 def fit(firm: Firm, *, method: str | None = None, **kwargs: Any) -> MertonResult:

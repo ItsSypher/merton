@@ -23,6 +23,13 @@ theory/calibration
 
 ```{toctree}
 :hidden:
+:caption: Tutorials
+
+tutorials/01_single_firm_aapl
+```
+
+```{toctree}
+:hidden:
 :caption: API reference
 
 api/merton/index

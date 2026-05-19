@@ -7,7 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-### Added
+### Added (Phase 0.2)
+
+- Duan (1994) transformed-data MLE calibrator (`merton.calibration.duan_mle`).
+- Survivorship-bias correction via closed-form first-passage probability
+  for geometric Brownian motion (`merton._backend._survival`).
+- KMV / Crosbie-Bohn iterative calibrator (`merton.calibration.kmv_iterative`)
+  with hookable empirical `edf_map`.
+- MLE asymptotic standard errors, Wald confidence intervals, and a generic
+  delta-method propagator (`merton.calibration.covariance`).
+- Block-bootstrap CIs for time-series calibrators
+  (`merton.calibration.block_bootstrap_calibration`); wired into
+  `MertonModel(n_bootstrap=…)`.
+- `MertonResult.confidence_interval(level, method)` lazy method (asymptotic
+  or bootstrap).
+- `MertonResult` now exposes `dd_series` / `pd_series` / `asset_value_series`
+  for time-series calibrations; the scalar `dd` / `pd` are the most-recent
+  observation.
+- Paper-replication test suite (`tests/golden/`) covering Bharath-Shumway
+  2008, Vassalou-Xing 2004, and a synthetic Duan MLE recovery test.
+- Executable AAPL-style tutorial (`docs/tutorials/01_single_firm_aapl.md`).
+
+### Added (Phase 0.1)
 
 - Initial release scaffolding (pyproject.toml, CI, docs skeleton).
 - Core single-firm Merton model: `Firm`, `MertonModel`, `MertonResult`.
