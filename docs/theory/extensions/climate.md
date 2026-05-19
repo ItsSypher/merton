@@ -6,6 +6,14 @@ or a user-defined extension. The construction is intentionally simple so
 that practitioners can substitute their house view of carbon prices and
 sectoral PD multipliers without rewriting the underlying calibration.
 
+The overlay is a specialisation of the package's general
+{doc}`scenarios framework <../scenarios>`. Where the atomic shocks
+(`equity_shock`, `vol_shock`, `rate_shock`, `debt_shock`) mutate a
+single :class:`~merton.core.firm.Firm` field, a
+:class:`~merton.scenarios.climate.ClimateScenario` derives the equity
+writedown from a carbon-price path and sectoral emission intensities,
+then layers a sectoral PD multiplier on top of the structural fit.
+
 ## Construction
 
 A :class:`~merton.scenarios.climate.ClimateScenario` consists of three

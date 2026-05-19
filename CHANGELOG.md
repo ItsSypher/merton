@@ -66,9 +66,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   wraps any `StructuralModel` / `MertonModel` with a `ClimateScenario`
   + sector tag; writes down equity before calibration and scales PD by
   the sectoral multiplier.
-- **Docs**: `docs/theory/extensions/climate.md`,
-  `docs/tutorials/06_climate_scenarios.md`,
+- **Docs**: `docs/theory/scenarios.md` (general framework overview),
+  `docs/theory/extensions/climate.md`,
+  `docs/tutorials/02_climate_scenarios.md`,
   `docs/cookbook/observability.md`, `docs/cookbook/spark-dask.md`.
+  Phase 0.8 features (`Scenario` framework, NGFS climate stress,
+  OpenTelemetry) are now called out in the README Highlights block.
 
 ### Added (Phase 0.7)
 

@@ -11,6 +11,13 @@ headline climate scenarios:
 | Current Policies | Hot-house | ~$50/tCO₂e | High (chronic) |
 | Fragmented World | Mixed | ~$120/tCO₂e | Moderate |
 
+If you haven't met `merton.scenarios` yet, the
+[scenarios theory page](../theory/scenarios.md) covers the general
+framework (the `Scenario` ABC, atomic shocks, and composition with `|`).
+Climate-specific math is in the
+[climate overlay theory page](../theory/extensions/climate.md). This
+tutorial focuses on running the four headline NGFS scenarios end-to-end.
+
 We use the package's `ClimateOverlay` to compose any structural model with a
 climate scenario and a sector tag, then loop over a small sector-diversified
 portfolio.

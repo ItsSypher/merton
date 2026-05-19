@@ -29,6 +29,12 @@ CreditGrades, Leland-Toft, jump-diffusion, Vasicek portfolio, climate overlays).
   calibration curves, rolling-window and walk-forward validation.
 - **Excel integration** — `=MERTON_DD(equity, σE, debt, rf, T)` and friends,
   available in Excel Web, Excel Mac (M365), and Excel Windows via xlwings Server.
+- **Climate stress** — composable `Scenario` framework with packaged NGFS Phase V
+  (2024) scenarios (`net_zero_2050`, `delayed_transition`, `current_policies`,
+  `fragmented_world`); `ClimateOverlay` wraps any structural model with
+  carbon-price paths and sectoral PD multipliers.
+- **OpenTelemetry observability** — opt-in via `merton.obs.enable(...)`; pipes
+  spans to any OTLP-compatible backend (Datadog, Honeycomb, Tempo, …).
 - **Modern Python** — type hints, Pydantic settings, structured logging,
   Apache-2.0 license, cross-platform wheels for Python 3.11-3.14 (incl. free-threaded).
 

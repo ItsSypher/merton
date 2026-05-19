@@ -28,6 +28,7 @@ theory/extensions/longstaff-schwartz
 theory/extensions/climate
 theory/portfolio/vasicek
 theory/portfolio/copulas
+theory/scenarios
 theory/metrics
 theory/bayesian-mcmc
 ```
@@ -37,7 +38,7 @@ theory/bayesian-mcmc
 :caption: Tutorials
 
 tutorials/01_single_firm_aapl
-tutorials/06_climate_scenarios
+tutorials/02_climate_scenarios
 ```
 
 ```{toctree}
