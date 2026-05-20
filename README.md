@@ -12,10 +12,10 @@ A production-grade Python package for the **Merton structural credit-risk model*
 and its industry-standard descendants (KMV, Black-Cox, Geske, Longstaff-Schwartz,
 CreditGrades, Leland-Toft, jump-diffusion, Vasicek portfolio, climate overlays).
 
-> **🚀 New in 1.0** — first stable release. API frozen per [semver](https://merton.readthedocs.io/contributing/api-stability),
+> **🚀 New in 1.0** — first stable release. API frozen per [semver](https://merton.readthedocs.io/en/latest/contributing/api-stability.html),
 > cold `import merton` down to ~500 ms (from ~1.1 s), conda-forge feedstock in
-> review. See the [announcement post](https://merton.readthedocs.io/blog/announcing-1.0)
-> and the [migration guide](https://merton.readthedocs.io/contributing/migrating-to-1.0).
+> review. See the [announcement post](https://merton.readthedocs.io/en/latest/blog/announcing-1.0.html)
+> and the [migration guide](https://merton.readthedocs.io/en/latest/contributing/migrating-to-1.0.html).
 
 ## Highlights
 
@@ -86,7 +86,7 @@ Then in any Excel workbook (Web / Mac / Windows):
 =MERTON_SPREAD(B2, B3, B4+B5, B6, B7, 0.6)
 ```
 
-See [docs/excel](https://merton.readthedocs.io/excel) for the full reference.
+See [the Excel docs](https://merton.readthedocs.io/en/latest/excel/installation.html) for the full reference.
 
 ## Performance
 
