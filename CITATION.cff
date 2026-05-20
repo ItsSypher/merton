@@ -8,6 +8,10 @@ authors:
 repository-code: "https://github.com/ItsSypher/merton"
 url: "https://merton.readthedocs.io"
 license: Apache-2.0
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.20309589"
+    description: "v1.0.0 software archive on Zenodo"
 keywords:
   - merton-model
   - structural-credit-risk
@@ -31,6 +35,7 @@ preferred-citation:
       given-names: Kavy
   version: "1.0.0"
   url: "https://merton.readthedocs.io"
+  doi: "10.5281/zenodo.20309589"
 references:
   - type: article
     title: "On the Pricing of Corporate Debt: The Risk Structure of Interest Rates"
