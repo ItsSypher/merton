@@ -1,7 +1,8 @@
 # merton
 
-[![PyPI version](https://img.shields.io/pypi/v/merton.svg)](https://pypi.org/project/merton/)
-[![Python versions](https://img.shields.io/pypi/pyversions/merton.svg)](https://pypi.org/project/merton/)
+[![PyPI version](https://img.shields.io/pypi/v/merton?cacheSeconds=300)](https://pypi.org/project/merton/)
+[![Python versions](https://img.shields.io/pypi/pyversions/merton?cacheSeconds=300)](https://pypi.org/project/merton/)
+[![Downloads](https://static.pepy.tech/badge/merton/month)](https://pepy.tech/project/merton)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](https://github.com/ItsSypher/merton/blob/main/LICENSE)
 [![CI](https://github.com/ItsSypher/merton/actions/workflows/test.yml/badge.svg)](https://github.com/ItsSypher/merton/actions/workflows/test.yml)
 [![Docs](https://readthedocs.org/projects/merton/badge/?version=latest)](https://merton.readthedocs.io)
