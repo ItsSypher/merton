@@ -273,6 +273,10 @@ filterwarnings = [
     "error",
     "ignore::DeprecationWarning:numba.*",
     "ignore::DeprecationWarning:scipy.*",
+    # pytest-benchmark emits this warning when xdist is active (CI uses
+    # `pytest -n auto`). Benchmarks live under `tests/benchmarks/` and
+    # are already excluded from the default run; the warning is noise.
+    "ignore::pytest_benchmark.logger.PytestBenchmarkWarning",
 ]
 
 # -----------------------------------------------------------------------------

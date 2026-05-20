@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 project = "merton"
 author = "The Merton Authors"
-copyright = f"{datetime.now().year}, {author}"  # noqa: A001
+copyright = f"{datetime.now().year}, {author}"
 
 try:
     from merton import __version__ as release
