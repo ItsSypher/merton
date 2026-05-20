@@ -19,7 +19,9 @@ class TestSideloadDirectory:
     def test_macos_path(self, fake_home: Path, monkeypatch) -> None:
         monkeypatch.setattr("platform.system", lambda: "Darwin")
         d = installer.sideload_directory()
-        assert "Containers/com.Microsoft.Excel" in str(d)
+        # Path uses the host OS separator; normalize before asserting so
+        # this test passes on Windows runners as well.
+        assert "Containers/com.Microsoft.Excel" in str(d).replace("\\", "/")
 
     def test_windows_path(self, fake_home: Path, monkeypatch) -> None:
         monkeypatch.setattr("platform.system", lambda: "Windows")

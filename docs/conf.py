@@ -180,10 +180,7 @@ def setup(app):  # type: ignore[no-untyped-def]
 
     class _DropAutoapiDuplicateAttrs(logging.Filter):
         def filter(self, record: logging.LogRecord) -> bool:
-            msg = record.getMessage()
-            if "duplicate object description" in msg:
-                return False
-            return True
+            return "duplicate object description" not in record.getMessage()
 
     sphinx_logger = logging.getLogger("sphinx")
     sphinx_logger.addFilter(_DropAutoapiDuplicateAttrs())
