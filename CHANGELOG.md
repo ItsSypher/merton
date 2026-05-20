@@ -283,4 +283,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - NumPy backend (default) with backend-dispatch infrastructure ready for
   Numba, CuPy, JAX, and MLX in subsequent phases.
 
-[Unreleased]: https://github.com/merton-credit/merton/compare/HEAD...HEAD
+[Unreleased]: https://github.com/ItsSypher/merton/compare/HEAD...HEAD

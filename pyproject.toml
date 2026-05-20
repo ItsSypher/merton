@@ -85,9 +85,9 @@ obs = [
 ]
 data = ["yfinance>=0.2.40", "pandas-datareader>=0.10"]
 docs = [
-    "sphinx>=8.1",
+    "sphinx>=8.1,<9",  # myst-parser 5.x has a setup bug; pin while it's tracked
     "furo>=2024.8",
-    "myst-parser>=4.0",
+    "myst-parser>=4.0,<5",  # 5.x errors with `SphinxUnreferencedFootnotesDetector not in list`
     "myst-nb>=1.1",
     "sphinx-autoapi>=3.3",
     "sphinx-copybutton>=0.5",
@@ -119,9 +119,9 @@ merton = "merton.cli.main:app"
 
 [project.urls]
 Documentation = "https://merton.readthedocs.io"
-Source = "https://github.com/merton-credit/merton"
-Issues = "https://github.com/merton-credit/merton/issues"
-Changelog = "https://github.com/merton-credit/merton/blob/main/CHANGELOG.md"
+Source = "https://github.com/ItsSypher/merton"
+Issues = "https://github.com/ItsSypher/merton/issues"
+Changelog = "https://github.com/ItsSypher/merton/blob/main/CHANGELOG.md"
 
 # -----------------------------------------------------------------------------
 # Hatch build config

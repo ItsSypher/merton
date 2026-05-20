@@ -56,7 +56,7 @@ test:
     - merton doctor
 
 about:
-  home: https://github.com/merton-credit/merton
+  home: https://github.com/ItsSypher/merton
   summary: Production-grade Merton structural credit-risk model and extensions.
   description: |
     `merton` is a vectorized, GPU-capable Python package for the Merton
@@ -72,7 +72,7 @@ about:
   license_family: APACHE
   license_file: LICENSE
   doc_url: https://merton.readthedocs.io
-  dev_url: https://github.com/merton-credit/merton
+  dev_url: https://github.com/ItsSypher/merton
 
 extra:
   recipe-maintainers:

@@ -1,0 +1,9 @@
+[codespell]
+# Domain-specific terms that codespell flags but are correct in context.
+#
+# - fpr / FPR: "false positive rate", standard ROC terminology.
+# - addin: Excel/Office "Add-in".
+# - sme / SME: "Small and Medium-sized Enterprise", a Basel IRB asset class.
+# - re-use: explicit hyphenation; codespell prefers "reuse" but both are valid.
+ignore-words-list = fpr,addin,sme,re-use
+skip = .git,.venv,docs/_build,htmlcov,*.lock,*.ipynb,_version.py

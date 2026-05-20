@@ -103,7 +103,7 @@ The 1.x roadmap focuses on:
 Black-Cox 1976, Geske 1977, Leland-Toft 1996, Zhou 1997, Vassalou-Xing
 2004, Bharath-Shumway 2008, Crosbie-Bohn 2003, the CreditGrades 2002
 technical document, and Longstaff-Schwartz 1995. The package's own
-citation metadata lives in [`CITATION.cff`](https://github.com/merton-credit/merton/blob/main/CITATION.cff)
+citation metadata lives in [`CITATION.cff`](https://github.com/ItsSypher/merton/blob/main/CITATION.cff)
 and a Zenodo DOI will be assigned on the 1.0 tag.
 
 We'd love feedback. Open an issue or a discussion on the repo, or email
