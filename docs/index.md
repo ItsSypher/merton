@@ -78,7 +78,7 @@ performance/free-threaded
 :hidden:
 :caption: API reference
 
-api/merton/index
+api/index
 ```
 
 ```{toctree}
