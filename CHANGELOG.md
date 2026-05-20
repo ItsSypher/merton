@@ -16,9 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Deprecation helper** (`merton._deprecation`): `deprecated`,
   `deprecated_alias`, and `warn_deprecated` route renamed/retired public
   names through a `DeprecationWarning` with the removal target stamped in.
-- **Release machinery**: `RELEASING.md` documents the tag-driven
-  PyPI Trusted-Publisher flow; `SECURITY.md` documents the disclosure
-  process.
 - **Security CI** (`.github/workflows/security.yml`): weekly `bandit`,
   `pip-audit`, and OSV scanner runs on `main`; also runs on PRs that
   touch dependencies or the security config.

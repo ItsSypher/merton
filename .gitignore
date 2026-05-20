@@ -81,6 +81,9 @@ benchmarks/results/
 .env.local
 *.local
 
+# Local Claude project instructions (never tracked)
+CLAUDE.md
+
 # Excel artifacts
 *.xlsx.bak
 ~$*.xlsx
