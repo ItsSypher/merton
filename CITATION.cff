@@ -1,10 +1,11 @@
 cff-version: 1.2.0
-title: "merton: A specialized Python package for the Merton structural credit-risk model"
+title: "merton: A production-grade Python package for the Merton structural credit-risk model"
 message: "If you use this software, please cite it as below."
 type: software
 authors:
-  - family-names: The Merton Authors
-repository-code: "https://github.com/merton-credit/merton"
+  - family-names: Upadhyay
+    given-names: Kavy
+repository-code: "https://github.com/ItsSypher/merton"
 url: "https://merton.readthedocs.io"
 license: Apache-2.0
 keywords:
@@ -14,7 +15,22 @@ keywords:
   - probability-of-default
   - kmv
   - black-cox
+  - geske
+  - creditgrades
+  - leland-toft
+  - jump-diffusion
+  - longstaff-schwartz
+  - ngfs
+  - climate-stress-testing
   - quantitative-finance
+preferred-citation:
+  type: software
+  title: "merton: A production-grade Python package for the Merton structural credit-risk model"
+  authors:
+    - family-names: Upadhyay
+      given-names: Kavy
+  version: "1.0.0"
+  url: "https://merton.readthedocs.io"
 references:
   - type: article
     title: "On the Pricing of Corporate Debt: The Risk Structure of Interest Rates"
@@ -27,3 +43,16 @@ references:
     year: 1974
     start: 449
     end: 470
+  - type: article
+    title: "Valuing Corporate Securities: Some Effects of Bond Indenture Provisions"
+    authors:
+      - family-names: Black
+        given-names: Fischer
+      - family-names: Cox
+        given-names: John C.
+    journal: "Journal of Finance"
+    volume: 31
+    issue: 2
+    year: 1976
+    start: 351
+    end: 367

@@ -8,14 +8,14 @@ outputs on the same inputs.
 from __future__ import annotations
 
 import numpy as np
-from scipy.special import ndtr  # vectorized standard normal CDF
-from scipy.stats import norm
 
 SQRT_2PI = np.sqrt(2.0 * np.pi)
 
 
 def norm_cdf(x: np.ndarray | float) -> np.ndarray:
     """Standard normal CDF Φ(x). Uses scipy.special.ndtr for accuracy + speed."""
+    from scipy.special import ndtr  # lazy: scipy.special is cheap but tracks with scipy.stats
+
     return ndtr(x)
 
 
@@ -26,6 +26,8 @@ def norm_pdf(x: np.ndarray | float) -> np.ndarray:
 
 def norm_ppf(p: np.ndarray | float) -> np.ndarray:
     """Inverse standard normal CDF Φ⁻¹(p). Required for physical-PD mapping."""
+    from scipy.stats import norm  # lazy: scipy.stats costs ~300 ms to import
+
     return norm.ppf(p)
 
 

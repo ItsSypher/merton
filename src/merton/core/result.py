@@ -12,7 +12,6 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
 
 import numpy as np
-import pandas as pd
 
 from .._typing import ArrayLike, FloatArray
 from .distance import distance_to_default, prob_of_default
@@ -20,6 +19,8 @@ from .firm import Firm
 from .spread import implied_credit_spread
 
 if TYPE_CHECKING:
+    import pandas as pd
+
     from ..greeks.equity import GreeksResult
 
 
@@ -304,6 +305,8 @@ class MertonResult:
 
     def to_pandas(self) -> pd.DataFrame:
         """Single-row DataFrame summarising the fit."""
+        import pandas as pd  # lazy: pandas costs ~160 ms to import
+
         return pd.DataFrame([self.to_dict()])
 
     def to_polars(self) -> Any:  # pragma: no cover - extras only
@@ -316,6 +319,8 @@ class MertonResult:
 
     def to_excel(self, path: str, *, sheet: str = "Merton") -> None:
         """Write the result to an Excel workbook."""
+        import pandas as pd  # lazy
+
         df = self.to_pandas()
         with pd.ExcelWriter(path) as writer:
             df.to_excel(writer, sheet_name=sheet, index=False)

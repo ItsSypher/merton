@@ -1,8 +1,12 @@
 """merton: production-grade Merton structural credit-risk model.
 
-Public API entry points are re-exported here. Heavier submodules (``excel``,
-``scenarios``, ``obs``, ``cli``) are imported lazily on first access via
-``__getattr__`` so a cold ``import merton`` stays under ~150 ms.
+The cold import path stays light: the only eager dependencies are the
+core single-firm math (``core``, ``calibration``, ``extensions``,
+``greeks``) plus the type system and the Numba JIT pre-warm hook.
+Heavier surfaces — ``backtest`` (scipy.stats), ``portfolio``
+(MC + copulas), ``reports`` (jinja2), ``excel`` (FastAPI + xlwings),
+``scenarios``, ``obs``, ``cli`` — are imported lazily on first access
+through :func:`__getattr__`.
 
 Examples
 --------
@@ -25,16 +29,12 @@ except ImportError:  # pragma: no cover - first install before hatch-vcs runs
 
 from . import _config as config
 from . import (
-    backtest,
     calibration,
     exceptions,
     extensions,
     greeks,
-    portfolio,
-    reports,
 )
 from ._backend._numba import warm_cache as _warm_numba_cache
-from .batch import batch_fit
 from .core.default_point import DefaultPoint
 from .core.distance import distance_to_default, prob_of_default
 from .core.firm import Firm
@@ -50,16 +50,23 @@ if TYPE_CHECKING:
     from types import ModuleType
 
 # Submodules surfaced lazily through __getattr__ to keep cold-import light.
-# Only listed submodules that *exist on disk* land here — Phase 0.9 freezes
-# the public surface, so we don't advertise namespaces we don't ship.
-# `io`, `diagnostics`, and `viz` are roadmapped for 1.x; their helpers live
-# on `FirmPanel`, `MertonResult.summary()`, and `reports.html` respectively
-# until those landings.
+# - `backtest` pulls in scipy.stats + pandas (~500 ms eager).
+# - `portfolio` pulls in the MC engine + copulas.
+# - `reports` pulls in jinja2 + weasyprint.
+# - `excel` pulls in FastAPI + xlwings.
+# - `cli`, `obs`, `scenarios` are conditional surfaces.
+#
+# `io`, `diagnostics`, and `viz` are roadmapped for 1.x; their helpers
+# currently live on `FirmPanel`, `MertonResult.summary()`, and
+# `merton.reports` respectively.
 _LAZY_SUBMODULES = frozenset(
     {
+        "backtest",
         "cli",
         "excel",
         "obs",
+        "portfolio",
+        "reports",
         "scenarios",
     }
 )
@@ -70,6 +77,13 @@ def __getattr__(name: str) -> ModuleType:
         module = import_module(f"{__name__}.{name}")
         globals()[name] = module
         return module
+    if name == "batch_fit":
+        # `batch_fit` pulls pandas into the import path. Lazy-import it so
+        # users of the single-firm `fit()` API don't pay for it.
+        from .batch import batch_fit as _batch_fit
+
+        globals()["batch_fit"] = _batch_fit
+        return _batch_fit
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 

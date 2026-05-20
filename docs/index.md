@@ -86,6 +86,8 @@ api/merton/index
 :caption: Project
 
 contributing/api-stability
+contributing/migrating-to-1.0
+blog/announcing-1.0
 changelog
 references
 ```

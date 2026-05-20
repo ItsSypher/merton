@@ -12,6 +12,11 @@ A production-grade Python package for the **Merton structural credit-risk model*
 and its industry-standard descendants (KMV, Black-Cox, Geske, Longstaff-Schwartz,
 CreditGrades, Leland-Toft, jump-diffusion, Vasicek portfolio, climate overlays).
 
+> **🚀 New in 1.0** — first stable release. API frozen per [semver](https://merton.readthedocs.io/contributing/api-stability),
+> cold `import merton` down to ~500 ms (from ~1.1 s), conda-forge feedstock in
+> review. See the [announcement post](https://merton.readthedocs.io/blog/announcing-1.0)
+> and the [migration guide](https://merton.readthedocs.io/contributing/migrating-to-1.0).
+
 ## Highlights
 
 - **Vectorized core** — single-firm and panel-scale (10 000+ firms × decades)

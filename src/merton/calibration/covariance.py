@@ -18,7 +18,6 @@ from collections.abc import Callable
 from dataclasses import dataclass
 
 import numpy as np
-from scipy.stats import norm
 
 from .._typing import FloatArray
 from ..exceptions import MertonError
@@ -89,6 +88,8 @@ def wald_ci(
     """Symmetric Wald CI ``estimate ± z · se``."""
     if not 0 < level < 1:
         raise MertonError("level must be in (0, 1)")
+    from scipy.stats import norm  # lazy: scipy.stats costs ~300 ms to import
+
     z = float(norm.ppf(0.5 + level / 2.0))
     return ConfInt(
         lower=float(estimate) - z * float(se),

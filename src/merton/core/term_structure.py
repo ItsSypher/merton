@@ -9,12 +9,15 @@ convenience.
 from __future__ import annotations
 
 from collections.abc import Iterable
+from typing import TYPE_CHECKING
 
 import numpy as np
-import pandas as pd
 
 from .._typing import ArrayLike
 from .distance import distance_to_default, prob_of_default
+
+if TYPE_CHECKING:
+    import pandas as pd
 
 DEFAULT_HORIZONS: tuple[float, ...] = (1 / 12, 3 / 12, 6 / 12, 1.0, 3.0, 5.0)
 
@@ -36,6 +39,8 @@ def term_structure_pd(
         Columns: ``horizon_years`` (the input grid), ``dd`` (distance to
         default at that horizon), ``pd`` (risk-neutral PD).
     """
+    import pandas as pd  # lazy: pandas costs ~160 ms to import
+
     horizon_arr = np.asarray(list(horizons), dtype=np.float64)
     dd = distance_to_default(
         asset_value, asset_vol, debt, rf, horizon_arr, dividend_yield=dividend_yield

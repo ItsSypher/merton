@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added (Phase 1.0 — Public launch)
+
+- **First stable release**: dev-status classifier bumped to
+  `5 - Production/Stable`; `merton.__all__` is the v1.0 API surface
+  governed by [SemVer](https://semver.org/) (see
+  `docs/contributing/api-stability.md`).
+- **Lazy submodule loading**: `backtest`, `portfolio`, `reports`, and
+  `batch_fit` are now resolved on first access via `__getattr__`. Cold
+  `import merton` drops from ~1.1 s to ~500 ms on a 2024 M-series
+  MacBook. `merton.calibration.covariance`, `merton.core.result`,
+  `merton.core.term_structure`, and `merton._backend._numpy` defer
+  scipy/pandas imports to first use.
+- **conda-forge recipe** (`recipe/meta.yaml`) ready for the
+  `conda-forge/staged-recipes` PR. Once merged, `conda install -c
+  conda-forge merton` will be live.
+- **Launch documentation**: `docs/blog/announcing-1.0.md` (release
+  announcement), `docs/contributing/migrating-to-1.0.md` (migration
+  guide for 0.x users).
+- **`tests/performance/test_import_time.py`** locks the cold-import
+  budget (`< 750 ms` on the dev workstation) so future PRs that
+  re-introduce eager heavy imports fail CI.
+
 ### Added (Phase 0.9 — RC)
 
 - **API stability surface**: `docs/contributing/api-stability.md` is the
