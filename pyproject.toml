@@ -282,6 +282,11 @@ filterwarnings = [
     # `pytest -n auto`). Benchmarks live under `tests/benchmarks/` and
     # are already excluded from the default run; the warning is noise.
     "ignore::pytest_benchmark.logger.PytestBenchmarkWarning",
+    # opentelemetry's entry-points lookup hits importlib.metadata's
+    # legacy `SelectableGroups.values()` path on Python 3.11+, which
+    # warns. The OTel maintainers know about it; we'd see it on every
+    # `obs.enable()` call until they migrate.
+    "ignore:SelectableGroups dict interface is deprecated:DeprecationWarning",
 ]
 
 # -----------------------------------------------------------------------------
