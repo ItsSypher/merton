@@ -10,9 +10,10 @@ Budget rationale
 - numpy + numba together cost ~150 ms (hard deps; can't be deferred).
 - pydantic + pydantic-settings cost ~60 ms.
 - structlog + typer + rich + joblib together cost ~80 ms.
-- Leaves ~460 ms of headroom over a 750 ms budget for slack on slower
-  hardware and CI runners (GitHub Actions cold runners are ~2× slower
-  than dev workstations).
+- Dev workstations hit ~500 ms; GH-Actions cold runners are ~2-3×
+  slower, especially the Windows AMD64 ones. Pick 1500 ms so we still
+  catch the original 1100 ms regression class (eager backtest/pandas)
+  but tolerate runner variance.
 """
 
 from __future__ import annotations
@@ -21,8 +22,8 @@ import subprocess
 import sys
 
 # Budget in milliseconds. Tight enough to catch regressions; loose enough
-# to absorb GH-Actions variance.
-COLD_IMPORT_BUDGET_MS = 750.0
+# to absorb GH-Actions variance (Windows can be 2-3× slower than macOS).
+COLD_IMPORT_BUDGET_MS = 1500.0
 
 
 def _measure_cold_import_ms() -> float:

@@ -48,6 +48,9 @@ class TestExcelStatus:
 
 class TestExcelSampleWorkbook:
     def test_writes_a_workbook(self, tmp_path) -> None:
+        # The sample-workbook writer needs openpyxl (merton[excel]); skip if
+        # the extra isn't installed in the current environment.
+        pytest.importorskip("openpyxl")
         out = tmp_path / "sample.xlsx"
         result = runner.invoke(app, ["excel", "sample-workbook", "--out", str(out)])
         assert result.exit_code == 0

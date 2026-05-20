@@ -30,9 +30,14 @@ jobs:
       - name: Set up Python ${{ matrix.python-version }}
         run: uv python install ${{ matrix.python-version }}
       - name: Install package
+        # Installing the same extras locally as CLAUDE.md prescribes
+        # keeps coverage above the 90 % gate (otherwise obs / excel /
+        # mcmc / jax modules would only have skips) and lets mypy
+        # resolve their stubs in the lint job too. Platform-gated
+        # extras (gpu, mlx, bloomberg) intentionally stay out.
         run: |
           uv venv --python ${{ matrix.python-version }}
-          uv pip install -e ".[dev]"
+          uv pip install -e ".[dev,obs,excel,viz,mcmc,data,jax]"
       - name: Run tests
         shell: bash
         run: |
