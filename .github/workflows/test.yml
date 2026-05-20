@@ -18,7 +18,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-14, windows-latest]
-        python-version: ["3.11", "3.12", "3.13"]
+        # 3.11 = stated floor (pyproject.toml `requires-python`).
+        # 3.14 = current stable (released 2025-10-07).
+        # 3.15 is still in alpha (PEP 790); revisit when 3.15.0 ships in 2026-10.
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -49,8 +52,15 @@ jobs:
           file: ./coverage.xml
 
   free-threaded:
-    name: pytest (free-threaded Python 3.13t)
+    # Forward-looking check that merton works on PEP 779 free-threaded
+    # CPython. Numba 0.63 (2025-12) shipped initial free-threading
+    # support but `llvmlite` doesn't publish a free-threaded wheel yet
+    # and its sdist build fails on the stock GH runner (no LLVM dev
+    # headers). Until llvmlite publishes a 3.14t wheel, this job is
+    # informational — not a release blocker.
+    name: pytest (free-threaded Python 3.14t — non-blocking)
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
         with:
@@ -59,11 +69,11 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: pyproject.toml
-      - name: Set up free-threaded Python 3.13t
-        run: uv python install 3.13t
+      - name: Set up free-threaded Python 3.14t
+        run: uv python install 3.14t
       - name: Install package
         run: |
-          uv venv --python 3.13t
+          uv venv --python 3.14t
           uv pip install -e ".[dev]"
       - name: Verify GIL is disabled
         run: |
@@ -72,6 +82,6 @@ jobs:
       - name: Run unit tests under free-threading
         run: |
           source .venv/bin/activate
-          # -p no:randomly because the free-threaded run can still expose race conditions;
-          # -n auto for parallel pytest workers.
+          # -p no:randomly because free-threaded runs can still expose
+          # race conditions; -n auto for parallel pytest workers.
           pytest tests/unit tests/property tests/golden -q -n auto --no-cov
