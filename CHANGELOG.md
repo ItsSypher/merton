@@ -7,15 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-06-04
+
+### Added
+
+- Author website (`https://itskavy.vercel.app/`) surfaced on the PyPI
+  project sidebar (`[project.urls].Author`) and in `CITATION.cff`.
+
 ### Changed
 
-- CI: bumped GitHub Actions to Node 24-compatible majors
-  (`actions/checkout@v5`, `astral-sh/setup-uv@v6`,
-  `actions/upload-artifact@v5`, `actions/download-artifact@v5`,
+- `excel` extra now depends on `httpx2>=2.3` instead of `httpx`.
+  Starlette 1.2's `TestClient` prefers `httpx2` and raises a
+  `StarletteDeprecationWarning` (escalated to an error by our strict
+  `filterwarnings`) when it falls back to the legacy `httpx`. merton
+  never imports either directly — both only power the FastAPI
+  `TestClient` in the excel test-suite.
+- CI: bumped GitHub Actions to their first Node 24 majors
+  (`actions/checkout@v5`, `astral-sh/setup-uv@v7`,
+  `actions/upload-artifact@v7`, `actions/download-artifact@v8`,
   `codecov/codecov-action@v5`) to clear the Node 20 deprecation
   warnings ahead of GitHub's 2026-06-16 cutover.
-- conda-forge recipe (`recipe/meta.yaml`) pinned to 1.0.1 with the real
-  sdist sha256.
+- conda-forge recipe (`recipe/meta.yaml`) pinned to the latest release
+  with the real sdist sha256.
 
 ## [1.0.1] - 2026-06-04
 
@@ -305,6 +318,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - NumPy backend (default) with backend-dispatch infrastructure ready for
   Numba, CuPy, JAX, and MLX in subsequent phases.
 
-[Unreleased]: https://github.com/ItsSypher/merton/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/ItsSypher/merton/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/ItsSypher/merton/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/ItsSypher/merton/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/ItsSypher/merton/releases/tag/v1.0.0

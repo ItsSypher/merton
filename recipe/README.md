@@ -2,7 +2,7 @@
 
 This directory holds the `meta.yaml` we'll submit to
 [conda-forge/staged-recipes](https://github.com/conda-forge/staged-recipes).
-Pin it to the latest released version on PyPI (currently `1.0.1`).
+Pin it to the latest released version on PyPI (currently `1.0.2`).
 
 ## Submitting
 
@@ -11,8 +11,8 @@ Pin it to the latest released version on PyPI (currently `1.0.1`).
 3. Copy `merton/recipe/meta.yaml` into `recipes/merton/meta.yaml`.
 4. Update the `sha256:` placeholder by running:
    ```bash
-   pip download merton==1.0.1 --no-deps --no-binary :all: -d /tmp/m && \
-   shasum -a 256 /tmp/m/merton-1.0.1.tar.gz
+   pip download merton==1.0.2 --no-deps --no-binary :all: -d /tmp/m && \
+   shasum -a 256 /tmp/m/merton-1.0.2.tar.gz
    ```
 5. Open the PR. Reviewers will check the recipe; once merged, a feedstock
    repository at `conda-forge/merton-feedstock` is auto-created.
