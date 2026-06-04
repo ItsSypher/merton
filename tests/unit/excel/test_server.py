@@ -2,10 +2,15 @@
 
 from __future__ import annotations
 
+import importlib.util
+
 import pytest
 
 pytest.importorskip("fastapi")
-pytest.importorskip("httpx")
+# Starlette's TestClient prefers `httpx2` and falls back to `httpx`; require
+# whichever is available so this suite runs under the `excel` extra.
+if not (importlib.util.find_spec("httpx2") or importlib.util.find_spec("httpx")):
+    pytest.skip("needs httpx2 (or httpx) for the FastAPI TestClient", allow_module_level=True)
 
 from fastapi.testclient import TestClient
 
