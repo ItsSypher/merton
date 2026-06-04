@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- CI: bumped GitHub Actions to Node 24-compatible majors
+  (`actions/checkout@v5`, `astral-sh/setup-uv@v6`,
+  `actions/upload-artifact@v5`, `actions/download-artifact@v5`,
+  `codecov/codecov-action@v5`) to clear the Node 20 deprecation
+  warnings ahead of GitHub's 2026-06-16 cutover.
+- conda-forge recipe (`recipe/meta.yaml`) pinned to 1.0.1 with the real
+  sdist sha256.
+
 ## [1.0.1] - 2026-06-04
 
 ### Changed
