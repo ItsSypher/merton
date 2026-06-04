@@ -5,6 +5,7 @@ type: software
 authors:
   - family-names: Upadhyay
     given-names: Kavy
+    email: upadhyaykavy@gmail.com
 repository-code: "https://github.com/ItsSypher/merton"
 url: "https://merton.readthedocs.io"
 license: Apache-2.0
@@ -33,6 +34,7 @@ preferred-citation:
   authors:
     - family-names: Upadhyay
       given-names: Kavy
+      email: upadhyaykavy@gmail.com
   version: "1.0.0"
   url: "https://merton.readthedocs.io"
   doi: "10.5281/zenodo.20309589"

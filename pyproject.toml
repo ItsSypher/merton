@@ -14,7 +14,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
-authors = [{ name = "The Merton Authors" }]
+authors = [{ name = "Kavy Upadhyay", email = "upadhyaykavy@gmail.com" }]
 keywords = [
     "finance",
     "credit-risk",

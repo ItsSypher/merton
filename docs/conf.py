@@ -9,7 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
 
 project = "merton"
-author = "The Merton Authors"
+author = "Kavy Upadhyay"
 copyright = f"{datetime.now().year}, {author}"
 
 try:

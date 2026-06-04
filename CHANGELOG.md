@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-06-04
+
+### Changed
+
+- Package author metadata corrected from `The Merton Authors` to
+  `Kavy Upadhyay <upadhyaykavy@gmail.com>` across `pyproject.toml`,
+  `LICENSE`, `docs/conf.py`, and `CITATION.cff`. (PyPI metadata is
+  immutable per release, so the corrected author first appears on the
+  1.0.1 project page.)
+
+## [1.0.0] - 2026-05-20
+
 ### Added (Phase 1.0 — Public launch)
 
 - **First stable release**: dev-status classifier bumped to
@@ -283,4 +295,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - NumPy backend (default) with backend-dispatch infrastructure ready for
   Numba, CuPy, JAX, and MLX in subsequent phases.
 
-[Unreleased]: https://github.com/ItsSypher/merton/compare/HEAD...HEAD
+[Unreleased]: https://github.com/ItsSypher/merton/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/ItsSypher/merton/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/ItsSypher/merton/releases/tag/v1.0.0
