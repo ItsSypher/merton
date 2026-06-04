@@ -12,7 +12,7 @@ license: Apache-2.0
 identifiers:
   - type: doi
     value: "10.5281/zenodo.20309589"
-    description: "v1.0.0 software archive on Zenodo"
+    description: "Concept DOI on Zenodo (resolves to the latest release)"
 keywords:
   - merton-model
   - structural-credit-risk
@@ -35,7 +35,7 @@ preferred-citation:
     - family-names: Upadhyay
       given-names: Kavy
       email: upadhyaykavy@gmail.com
-  version: "1.0.0"
+  version: "1.0.1"
   url: "https://merton.readthedocs.io"
   doi: "10.5281/zenodo.20309589"
 references:
