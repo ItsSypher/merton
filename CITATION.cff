@@ -6,6 +6,7 @@ authors:
   - family-names: Upadhyay
     given-names: Kavy
     email: upadhyaykavy@gmail.com
+    website: "https://itskavy.vercel.app/"
 repository-code: "https://github.com/ItsSypher/merton"
 url: "https://merton.readthedocs.io"
 license: Apache-2.0
@@ -35,6 +36,7 @@ preferred-citation:
     - family-names: Upadhyay
       given-names: Kavy
       email: upadhyaykavy@gmail.com
+      website: "https://itskavy.vercel.app/"
   version: "1.0.1"
   url: "https://merton.readthedocs.io"
   doi: "10.5281/zenodo.20309589"

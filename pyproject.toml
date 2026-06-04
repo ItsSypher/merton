@@ -122,6 +122,7 @@ Documentation = "https://merton.readthedocs.io"
 Source = "https://github.com/ItsSypher/merton"
 Issues = "https://github.com/ItsSypher/merton/issues"
 Changelog = "https://github.com/ItsSypher/merton/blob/main/CHANGELOG.md"
+Author = "https://itskavy.vercel.app/"
 
 # -----------------------------------------------------------------------------
 # Hatch build config
